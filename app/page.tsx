@@ -379,7 +379,7 @@ export default function Home() {
                     <p className="text-center text-text-muted text-xs">
                       Or open this page in{" "}
                       <button onClick={() => { window.location.href = `intent://${window.location.href.replace(/^https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`; }}
-                        className="text-accent-green underline">Chrome</a>
+                        className="text-accent-green underline">Chrome</button>
                       {" "}for one-tap sharing.
                     </p>
                   </div>
