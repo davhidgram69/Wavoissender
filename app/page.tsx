@@ -216,16 +216,26 @@ export default function Home() {
   const fileName = inputFile ? inputFile.name.replace(/\.[^.]+$/, "") + ".opus" : "voicenote.opus";
 
   const handleShare = async () => {
-    if (!outputBlob) return;
-    const file = new File([outputBlob], fileName, { type: "audio/ogg; codecs=opus" });
-    try {
-      await navigator.share({ files: [file], title: "Voice Note" });
-    } catch (err) {
-      if (err instanceof Error && err.name !== "AbortError") {
-        triggerDownload(outputBlob, fileName);
-      }
-    }
-  };
+  if (!outputBlob) return;
+
+  const file = new File([outputBlob], fileName, {
+    type: "audio/ogg; codecs=opus"
+  });
+
+  if (!navigator.canShare || !navigator.canShare({ files: [file] })) {
+    alert("Your browser does not support sharing this audio file.");
+    return;
+  }
+
+  try {
+    await navigator.share({
+      files: [file],
+      title: "Voice Note"
+    });
+  } catch (err) {
+    alert("Sharing failed: " + (err instanceof Error ? err.message : String(err)));
+  }
+};
 
   const handleDownload = () => { if (outputBlob) triggerDownload(outputBlob, fileName); };
 
