@@ -219,21 +219,27 @@ export default function Home() {
   if (!outputBlob) return;
 
   const file = new File([outputBlob], fileName, {
-    type: "audio/ogg; codecs=opus"
+    type: "audio/ogg"
   });
 
-  if (!navigator.canShare || !navigator.canShare({ files: [file] })) {
-    alert("Your browser does not support sharing this audio file.");
-    return;
-  }
-
   try {
-    await navigator.share({
+    const shareData = {
       files: [file],
       title: "Voice Note"
-    });
+    };
+
+    if (navigator.canShare?.(shareData)) {
+      await navigator.share(shareData);
+    } else {
+      alert("Your browser cannot share this audio file.");
+    }
   } catch (err) {
-    alert("Sharing failed: " + (err instanceof Error ? err.message : String(err)));
+    alert(
+      "Error name: " +
+      (err instanceof Error ? err.name : "Unknown") +
+      "\nMessage: " +
+      (err instanceof Error ? err.message : String(err))
+    );
   }
 };
 
